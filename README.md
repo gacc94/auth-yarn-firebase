@@ -33,3 +33,25 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ~~~
 yarn global add firebase-tools
 ~~~
+
+### Instalar AngularFire
+~~~
+ng add @angular/fire
+~~~
+
+### Instalar firebase en el proyecto
+~~~
+yarn add firebase
+~~~
+
+# Emulator de Firebase
+
+### Inicializar el emulador de Firebase
+~~~
+firebase init emulators
+~~~
+
+### Comenzar con el emulador de Firebase en Dev
+~~~
+firebase emulator:start
+~~~
