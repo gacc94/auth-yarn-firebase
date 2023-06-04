@@ -1,5 +1,6 @@
 import {Routes} from "@angular/router";
 import {AuthLayoutComponent} from "./layout/auth-layout/auth-layout.component";
+import {SignInComponent} from "./pages/sign-in/sign-in.component";
 
 export const authRoutes: Routes = [
     {
@@ -7,7 +8,8 @@ export const authRoutes: Routes = [
         component: AuthLayoutComponent,
         children: [
             {
-                path: ''
+                path: 'sign-in',
+                component: SignInComponent,
             }
         ]
     }
