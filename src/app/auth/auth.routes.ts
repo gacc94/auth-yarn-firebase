@@ -10,6 +10,11 @@ export const authRoutes: Routes = [
             {
                 path: 'sign-in',
                 component: SignInComponent,
+            },
+            {
+                path: '**',
+                redirectTo: 'sign-in',
+                pathMatch: "full",
             }
         ]
     }

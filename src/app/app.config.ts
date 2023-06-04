@@ -6,6 +6,7 @@ import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
 import {connectFirestoreEmulator, getFirestore, provideFirestore} from "@angular/fire/firestore";
 import {environment} from "../environments/environment";
 import {connectAuthEmulator, getAuth, provideAuth} from "@angular/fire/auth";
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const firebaseConfig = {
     apiKey: "AIzaSyDkoOMhxux5vPznOtgVTT7bXl-Y3uN2Z9E",
@@ -19,20 +20,16 @@ export const firebaseConfig = {
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideRouter(routes),
-        importProvidersFrom(
-            provideFirebaseApp(() => initializeApp(firebaseConfig)),
-            provideAuth( () => {
-                const auth = getAuth();
-                connectAuthEmulator(auth, 'http://localhost/9099',{disableWarnings: true})
-                return auth;
-            } ),
-            provideFirestore(() => {
-                const firestore = getFirestore();
-                connectFirestoreEmulator(firestore, 'http://localhost', 9098)
-                return getFirestore()
-            }),
-
-        )
-    ]
+    provideRouter(routes),
+    importProvidersFrom(provideFirebaseApp(() => initializeApp(firebaseConfig)), provideAuth(() => {
+        const auth = getAuth();
+        connectAuthEmulator(auth, 'http://localhost/9099', { disableWarnings: true });
+        return auth;
+    }), provideFirestore(() => {
+        const firestore = getFirestore();
+        connectFirestoreEmulator(firestore, 'http://localhost', 9098);
+        return getFirestore();
+    })),
+    provideAnimations()
+]
 };
