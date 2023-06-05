@@ -1,0 +1,7 @@
+@use 'config/mixin' as mixin;
+
+.container {
+    height: 100vh;
+    @include mixin.flex(flex, row, nowrap, center, center , 1rem );
+}
+

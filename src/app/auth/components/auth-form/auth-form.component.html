@@ -1,0 +1,44 @@
+<pre>
+    <p>{{ (user$ | async) | json}}</p>
+</pre>
+<div class="form-container">
+    <h1>{{ action | titlecase }}</h1>
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" placeholder="Ingrese su email" type="email">
+                <mat-icon matSuffix fontIcon="person"/>
+                <mat-error *ngIf="hasError('email')">{{ errorMessage('email') }}</mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Contraseña</mat-label>
+                <input matInput formControlName="password" placeholder="Ingrese su contraseña" type="password">
+                <mat-icon matSuffix fontIcon="key"/>
+                <mat-error *ngIf="password?.hasError('required')">La contraseña es obligatoria</mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <span><a href="#">Forgot password?</a></span>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" type="submit">
+                {{ action | titlecase}}
+            </button>
+        </div>
+        <div>
+            <button mat-raised-button type="button" color="accent" (click)="signInGoogle()">
+                Google login
+            </button>
+        </div>
+        <ng-container *ngIf="action === 'sign-in'">
+            <div>
+                <span>Don-t have an account yet?</span> - <a routerLink="/auth/sign-up">Sign up</a>
+            </div>
+        </ng-container>
+
+    </form>
+
+</div>

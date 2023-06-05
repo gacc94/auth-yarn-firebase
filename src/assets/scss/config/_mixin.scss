@@ -1,0 +1,21 @@
+/* MIXIN PARA FLEXBOX*/
+@mixin flex($dis, $direction, $corte, $just, $align, $gap ) {
+    display: $dis;
+    flex-flow: $direction $corte;
+    justify-content: $just;
+    align-items: $align;
+    gap: $gap;
+}
+
+/* MIXIN PARA GRID*/
+
+@mixin grid($columnas, $espacio) {
+    display: grid;
+    grid-template-columns: repeat($columnas, 1fr);
+    gap: $espacio;
+
+    @media screen and (min-width: 468px) {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}

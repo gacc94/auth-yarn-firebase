@@ -53,5 +53,5 @@ firebase init emulators
 
 ### Comenzar con el emulador de Firebase en Dev
 ~~~
-firebase emulator:start
+firebase emulators:start
 ~~~
