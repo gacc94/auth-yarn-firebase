@@ -1,15 +1,7 @@
-import {
-    Auth,
-    authState,
-    createUserWithEmailAndPassword,
-    GoogleAuthProvider,
-    sendEmailVerification, signInWithEmailAndPassword
-} from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, User, UserCredential } from '@angular/fire/auth';
 import { inject, Injectable } from '@angular/core';
-import { signInWithRedirect, User } from '@firebase/auth';
+import { signInWithRedirect } from '@firebase/auth';
 import { Router } from '@angular/router';
-import {Observable} from "rxjs";
-import firebase from "firebase/compat";
 
 
 interface ErrorResponse {
@@ -29,7 +21,7 @@ export class AuthService {
     constructor(
     ) {}
 
-    get authState$(){
+    get userState$(){
         return authState(this.auth);
     }
 
@@ -71,16 +63,9 @@ export class AuthService {
 
     async signIn(email: string, password: string): Promise<void> {
         try {
-            /*
-          * Sign In */
             const { user } = await signInWithEmailAndPassword(this.auth, email, password);
             console.log(user);
-            /*
-          * Check if user is already verify */
             this.checkUserIsVerified(user);
-            /*
-          * * Redirect to somewhere */
-            this.router.navigate(['/auth/profile']).then();
 
         } catch (err) {
             const { code, message } = err as ErrorResponse;
@@ -98,10 +83,18 @@ export class AuthService {
         }
     }
 
+    async sendPasswordResetEmail(email: string): Promise<void> {
+        try {
+            await sendPasswordResetEmail(this.auth, email);
+        } catch (err: unknown) {
+            console.log('', err);
+        }
+    }
     private checkUserIsVerified(user: User): void {
-        const verified = true;
-        const route: string = verified ? '/home' : '/user/email-verification'
+        const route: string = user.emailVerified ? '/home' : '/auth/email-verification'
         this.router.navigate([route]).then();
     }
+
+
 
 }

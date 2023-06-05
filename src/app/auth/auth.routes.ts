@@ -1,9 +1,9 @@
 import {Routes} from "@angular/router";
 import {AuthLayoutComponent} from "./layout/auth-layout/auth-layout.component";
-import {SignInComponent} from "./pages/sign-in/sign-in.component";
-import {SignUpComponent} from "./pages/sign-up/sign-up.component";
 import {EmailVerificationComponent} from "./pages/email-verification/email-verification.component";
 import {ProfileComponent} from "./pages/profile/profile.component";
+import {authGuard} from "../core/guards/auth.guard";
+import {ForgotPasswordComponent} from "./pages/forgot-password/forgot-password.component";
 
 export const authRoutes: Routes = [
     {
@@ -13,12 +13,14 @@ export const authRoutes: Routes = [
             {
                 path: 'sign-in',
                 title: 'Sign-In',
-                component: SignInComponent,
+                loadComponent: () => import('./pages/sign-in/sign-in.component').then(c => c.SignInComponent),
+                canActivate: [authGuard],
             },
             {
                 path: 'sign-up',
                 title: 'Sign-Up',
-                component: SignUpComponent
+                loadComponent: () => import('./pages/sign-up/sign-up.component').then(c => c.SignUpComponent),
+                // canActivate: [AuthGuard],
             },
             {
                 path: 'email-verification',
@@ -29,6 +31,11 @@ export const authRoutes: Routes = [
                 path: 'profile',
                 title: 'Profile',
                 component: ProfileComponent,
+            },
+            {
+                path: 'forgot-password',
+                title: 'Forgot-password',
+                component: ForgotPasswordComponent,
             },
             {
                 path: '**',

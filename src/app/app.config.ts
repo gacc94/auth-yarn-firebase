@@ -3,8 +3,8 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
-import {connectFirestoreEmulator, getFirestore, provideFirestore} from "@angular/fire/firestore";
-import {connectAuthEmulator, getAuth, provideAuth} from "@angular/fire/auth";
+import {connectFirestoreEmulator, Firestore, getFirestore, provideFirestore} from "@angular/fire/firestore";
+import {Auth, connectAuthEmulator, getAuth, provideAuth} from "@angular/fire/auth";
 import {provideAnimations} from '@angular/platform-browser/animations';
 
 const firebaseConfig = {
@@ -23,12 +23,12 @@ export const appConfig: ApplicationConfig = {
         importProvidersFrom(
             provideFirebaseApp(() => initializeApp(firebaseConfig)),
             provideAuth(() => {
-                const auth = getAuth();
+                const auth: Auth = getAuth();
                 connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
                 return auth;
             }),
             provideFirestore(() => {
-                const firestore = getFirestore();
+                const firestore: Firestore = getFirestore();
                 connectFirestoreEmulator(firestore, 'http://localhost', 9098);
                 return getFirestore();
             })),

@@ -9,7 +9,7 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ErrorMessageComponent} from "../error-message/error-message.component";
 import {AuthService} from "@services/auth.service";
 import {Observable} from "rxjs";
-import {ConstantsUtil} from "@utils/constants.util";
+import {ConstantsUtil} from "@utils/library/constants.util";
 
 const actionType = {
     SignIn: {
@@ -50,7 +50,7 @@ export class AuthFormComponent implements OnInit{
         this.action = this.activateRoute.snapshot.routeConfig?.path ?? '';
         console.log(this.action);
         this.initForm();
-        this.user$ = this.authService.authState$;
+        this.user$ = this.authService.userState$;
     }
 
     initForm() {
