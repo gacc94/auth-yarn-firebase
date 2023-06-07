@@ -22,4 +22,12 @@ export abstract class  ConstantsUtil {
     * ======================================*/
 
     static readonly PATTERN_EMAIL: string = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
+
+
+    /*
+    * ========================================
+    *           LOCALSTORAGE - KEYS
+    * =======================================*/
+    static readonly TOKEN: string = 'token';
+    static readonly REFRESH_TOKEN: string = 'refresh-token';
 }

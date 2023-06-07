@@ -26,6 +26,7 @@
         "paths": {
             "@services*": ["src/app/services*"],
             "@utils*": ["src/app/utils*"],
+            "@core*": ["src/app/core*"],
 
         }
     },

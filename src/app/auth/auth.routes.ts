@@ -1,9 +1,6 @@
 import {Routes} from "@angular/router";
 import {AuthLayoutComponent} from "./layout/auth-layout/auth-layout.component";
-import {EmailVerificationComponent} from "./pages/email-verification/email-verification.component";
-import {ProfileComponent} from "./pages/profile/profile.component";
 import {authGuard, emailVerificationGuard} from "../core/guards/auth.guard";
-import {ForgotPasswordComponent} from "./pages/forgot-password/forgot-password.component";
 
 export const authRoutes: Routes = [
     {
@@ -29,14 +26,9 @@ export const authRoutes: Routes = [
                 canActivate : [emailVerificationGuard],
             },
             {
-                path: 'profile',
-                title: 'Profile',
-                component: ProfileComponent,
-            },
-            {
                 path: 'forgot-password',
                 title: 'Forgot-password',
-                component: ForgotPasswordComponent,
+                loadComponent: () => import('./pages/forgot-password/forgot-password.component').then(c=>c.ForgotPasswordComponent),
             },
             {
                 path: '**',

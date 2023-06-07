@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
@@ -15,19 +15,6 @@ import firebase from "firebase/compat";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {AlertService} from "@services/alert.service";
 import FirebaseError = firebase.FirebaseError;
-import {HttpErrorResponse} from "@angular/common/http";
-
-const actionType = {
-    SignIn: {
-        action: 'signIn',
-        title: 'Sign In'
-    },
-    SignUp: {
-        action: 'signUp',
-        title: 'Sign Up'
-    }
-} as const;
-type ActionType = keyof typeof actionType;
 
 @Component({
     selector: 'gac-auth-form',
@@ -48,11 +35,12 @@ type ActionType = keyof typeof actionType;
     styleUrls: ['./auth-form.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AuthFormComponent implements OnInit{
+export class AuthFormComponent implements OnInit, AfterViewInit{
     action!: string;
     authForm!: FormGroup;
 
     user$!: Observable<any>;
+    isDisabled: boolean = false;
 
     constructor(
         private readonly activateRoute: ActivatedRoute,
@@ -133,13 +121,14 @@ export class AuthFormComponent implements OnInit{
     }
 
     private signIn(email: string, password: string) {
+        this.isDisabled = true
         return this.authService.signIn(email, password).pipe(
             takeUntilDestroyed(this.destroyRef),
         ).subscribe({
             next: (value) => {
                 console.log(value);
             },
-            error: (err: FirebaseError) => {
+            error: (err: any) => {
                 console.log({err});
                 this.alertService.snackBarError(err.message);
             }
@@ -148,11 +137,12 @@ export class AuthFormComponent implements OnInit{
 
     private signUp(email: string, password: string) {
         this.authService.signUp(email, password).pipe(
+            takeUntilDestroyed(this.destroyRef),
         ).subscribe({
             next: ( value ) => {
                 console.log(value);
             },
-            error: (err: Error | any ) => {
+            error: (err: FirebaseError | any ) => {
                 if ( err.customData._tokenResponse.error.code === 400 ) {
                     this.alertService.snackBarError(ConstantsUtil.EMAIL_IN_USE);
                 }

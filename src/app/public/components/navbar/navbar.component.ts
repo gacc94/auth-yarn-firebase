@@ -6,6 +6,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {AuthService} from "@services/auth.service";
 import {Router} from "@angular/router";
 import {RoutesUtils} from "@utils/library/routes.utils";
+import {TokenService} from "@services/token.service";
 
 @Component({
     selector: 'gac-navbar',
@@ -23,12 +24,15 @@ export class NavbarComponent {
 
     private readonly authService: AuthService = inject(AuthService);
     private readonly router: Router = inject(Router);
+    private readonly tokenService: TokenService = inject(TokenService);
+
 
     signIn(event: Event): void {
         this.router.navigate([RoutesUtils.SIGN_IN]).then();
     }
 
     signOut(evt: Event): void {
-        this.authService.signOut().then();
+        this.tokenService.removeToken();
+        this.authService.signOut();
     }
 }

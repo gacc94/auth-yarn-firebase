@@ -3,28 +3,17 @@ import { inject, Injectable } from '@angular/core';
 import { signInWithRedirect } from '@firebase/auth';
 import { Router } from '@angular/router';
 import {
-    catchError,
-    EMPTY,
-    from, fromEvent, interval,
+    catchError, delay,
+    from,
     map,
     Observable,
-    ObservableInput,
-    of,
-    OperatorFunction,
-    switchMap, take, takeLast,
+    switchMap, tap,
     throwError
 } from "rxjs";
 import {RoutesUtils} from "@utils/library/routes.utils";
 import firebase from "firebase/compat";
 import FirebaseError = firebase.FirebaseError;
-import {HttpErrorResponse} from "@angular/common/http";
-
-
-
-interface ErrorResponse {
-    code: string;
-    message: string;
-}
+import {TokenService} from "@services/token.service";
 
 
 @Injectable({
@@ -34,6 +23,7 @@ export class AuthService {
     private readonly auth: Auth = inject(Auth);
     private readonly router: Router = inject(Router);
     private readonly googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
+    private readonly tokenService: TokenService = inject(TokenService);
 
     constructor(
     ) {}
@@ -43,15 +33,26 @@ export class AuthService {
     }
 
     signInGoogle(): Observable<any> {
-        return from(signInWithRedirect(this.auth, this.googleProvider));
+        return from(signInWithRedirect(this.auth, this.googleProvider)).pipe(
+            /*
+             * Aun falta setear el token del usuario al ingresar con google
+             */
+            tap((user) => {
+                const userData = user as any;
+                console.log(userData.accessToken)
+                // this.tokenService.saveToken(userData.accessToken);
+            }),
+            catchError(this.handleError)
+        );
     }
 
-    async signOut(): Promise<void> {
-        try {
-            await this.auth.signOut();
-        } catch (err: unknown) {
-            console.log('Google login', err);
-        }
+    signOut(): Observable<any>{
+        return from(this.auth.signOut()).pipe(
+            tap((res) => {
+                console.log('eSTOY HACIENDO LOGOUT');
+            }),
+            catchError(this.handleError ),
+        );
     }
 
     signUp(email: string, password: string): Observable<any> {
@@ -68,6 +69,11 @@ export class AuthService {
 
     signIn(email: string, password: string): Observable<any> {
         return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+            tap(({user}) => {
+                const userData = user as any;
+                console.log(userData.accessToken)
+                this.tokenService.saveToken(userData.accessToken);
+            }),
             map( ( { user } ) => {
                 console.log(user);
                 this.checkUserIsVerified(user);
@@ -99,7 +105,5 @@ export class AuthService {
             : RoutesUtils.EMAIL_VERIFICATION;
         this.router.navigate([route]).then();
     }
-
-
 
 }

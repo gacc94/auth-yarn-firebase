@@ -4,6 +4,7 @@ import {AuthService} from "@services/auth.service";
 import {map, Observable, of, take, tap} from "rxjs";
 import {RoutesUtils} from "@utils/library/routes.utils";
 import {User} from "firebase/auth";
+import {TokenService} from "@services/token.service";
 
 export const authGuard: CanActivateFn = () : Observable<boolean> | boolean | any => {
     const authService: AuthService = inject(AuthService);
@@ -14,8 +15,8 @@ export const authGuard: CanActivateFn = () : Observable<boolean> | boolean | any
         take(1),
         tap((res: User | null) => console.log(res)),
         map( (isLoggedIn) => {
-            if( isLoggedIn) {
-                router.navigate([RoutesUtils.HOME]).then()
+            if( !!isLoggedIn) {
+                router.navigate([RoutesUtils.DASHBOARD]).then()
                 return false;
             }
             return  true;
@@ -41,6 +42,17 @@ export const emailVerificationGuard: CanActivateFn | any = (route: ActivatedRout
             return true
         })
     );
+}
 
-
+export const authRedirectGuard: CanActivateFn = () => {
+    const authService: AuthService = inject(AuthService);
+    const router: Router = inject(Router);
+    const token: TokenService = inject(TokenService);
+    console.log('Guard de Dashboard')
+    console.log(token.getToken());
+    if (token.getToken() === null) {
+        router.navigate([RoutesUtils.SIGN_IN]).then();
+        return false
+    }
+    return  true
 }
