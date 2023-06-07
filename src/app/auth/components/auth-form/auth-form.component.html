@@ -1,5 +1,5 @@
 <pre>
-    <p>{{ (user$ | async) | json}}</p>
+    {{  (user$ | async) | json}}
 </pre>
 <div class="form-container">
     <h1>{{ action | titlecase }}</h1>
@@ -17,7 +17,7 @@
                 <mat-label>Contraseña</mat-label>
                 <input matInput formControlName="password" placeholder="Ingrese su contraseña" type="password">
                 <mat-icon matSuffix fontIcon="key"/>
-                <mat-error *ngIf="password?.hasError('required')">La contraseña es obligatoria</mat-error>
+                <mat-error *ngIf="hasError('password')">{{ errorMessage('password') }}</mat-error>
             </mat-form-field>
         </div>
         <div>

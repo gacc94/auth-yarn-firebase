@@ -2,7 +2,7 @@ import {Routes} from "@angular/router";
 import {AuthLayoutComponent} from "./layout/auth-layout/auth-layout.component";
 import {EmailVerificationComponent} from "./pages/email-verification/email-verification.component";
 import {ProfileComponent} from "./pages/profile/profile.component";
-import {authGuard} from "../core/guards/auth.guard";
+import {authGuard, emailVerificationGuard} from "../core/guards/auth.guard";
 import {ForgotPasswordComponent} from "./pages/forgot-password/forgot-password.component";
 
 export const authRoutes: Routes = [
@@ -20,12 +20,13 @@ export const authRoutes: Routes = [
                 path: 'sign-up',
                 title: 'Sign-Up',
                 loadComponent: () => import('./pages/sign-up/sign-up.component').then(c => c.SignUpComponent),
-                // canActivate: [AuthGuard],
+                canActivate: [authGuard],
             },
             {
                 path: 'email-verification',
                 title: 'Email-verification',
-                component: EmailVerificationComponent,
+                loadComponent: () => import('./pages/email-verification/email-verification.component').then(c => c.EmailVerificationComponent),
+                canActivate : [emailVerificationGuard],
             },
             {
                 path: 'profile',

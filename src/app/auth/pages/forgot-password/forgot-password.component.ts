@@ -9,6 +9,8 @@ import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators
 import {RouterLink} from "@angular/router";
 import {ConstantsUtil} from "@utils/library/constants.util";
 import {AuthService} from "@services/auth.service";
+import {tap} from "rxjs";
+import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'gac-forgot-password',
@@ -21,7 +23,8 @@ import {AuthService} from "@services/auth.service";
         MatIconModule,
         MatInputModule,
         ReactiveFormsModule,
-        RouterLink
+        RouterLink,
+        MatSnackBarModule,
     ],
     templateUrl: './forgot-password.component.html',
     styleUrls: ['./forgot-password.component.scss']
@@ -30,6 +33,10 @@ export class ForgotPasswordComponent implements OnInit{
 
     private readonly fb: FormBuilder = inject(FormBuilder);
     private readonly authService: AuthService = inject(AuthService);
+
+    constructor(
+        private _snackBar: MatSnackBar
+    ) {}
 
     forgotForm!: FormGroup;
     isEmailSend: boolean = false;
@@ -48,21 +55,35 @@ export class ForgotPasswordComponent implements OnInit{
         return this.forgotForm.controls['email'];
     }
 
-    async onSubmit(event: Event): Promise<void> {
+    onSubmit(event: Event) {
         event?.stopPropagation();
         console.log()
-        if (!this.forgotForm.valid){
+        if (!this.forgotForm.valid) {
             this.forgotForm.markAllAsTouched();
-            return ;
+            return;
         }
 
-        try {
-            this.isEmailSend = true;
-            await this.authService.sendPasswordResetEmail(this.forgotForm.controls['email'].value).then();
-        } catch (err) {
-            this.isEmailSend = false;
-            console.log('Reset Password:', err);
-        }
+        this.authService.sendPasswordResetEmail(this.forgotForm.controls['email'].value).pipe(
+            tap( (res) => console.log(res))
+        ).subscribe({
+            next: (value) => {
+                this.isEmailSend = true;
+                console.log(value);
+            },
+            error: ({code, message}) => {
+                this.isEmailSend = false;
+                this._snackBar.open(
+                    ConstantsUtil.EMAIL_NOT_EXIST,
+                    '🍕',
+                    {
+                        horizontalPosition: 'center',
+                        verticalPosition: 'top',
+                        politeness: 'off',
+                        duration: 3000,
+                    });
+                console.table( code, message );
+            }
+        })
     }
 
     hasError(field: string): boolean {
@@ -70,13 +91,13 @@ export class ForgotPasswordComponent implements OnInit{
         return (control.touched || control.dirty) && !control.valid;
     }
 
-    errorMessage(field: string) {
+    errorMessage(field: string): string | undefined {
         const control: AbstractControl = this.forgotForm.controls[field];
         if (control.hasError('required')){
             return ConstantsUtil.REQUIRED;
         } else if (control.hasError('pattern')){
             return ConstantsUtil.PATTERN;
         }
-        return '';
+        return
     }
 }

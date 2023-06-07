@@ -12,7 +12,9 @@ export abstract class  ConstantsUtil {
     static readonly PATTERN: string = 'Email must be valid.';
     static readonly MIN_LENGTH: string = 'This field must be at least 5 characters long.';
     static readonly EMAIL: string = 'Email must be valid.';
-
+    static readonly EMAIL_NOT_EXIST: string = 'The email entered does not exist.';
+    static readonly DATA_INVALID: string = 'the data is invalid.';
+    static readonly EMAIL_IN_USE: string = 'the email already in use.';
 
     /*
     * =======================================

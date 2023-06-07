@@ -6,6 +6,7 @@ import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
 import {connectFirestoreEmulator, Firestore, getFirestore, provideFirestore} from "@angular/fire/firestore";
 import {Auth, connectAuthEmulator, getAuth, provideAuth} from "@angular/fire/auth";
 import {provideAnimations} from '@angular/platform-browser/animations';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDkoOMhxux5vPznOtgVTT7bXl-Y3uN2Z9E",
@@ -24,14 +25,16 @@ export const appConfig: ApplicationConfig = {
             provideFirebaseApp(() => initializeApp(firebaseConfig)),
             provideAuth(() => {
                 const auth: Auth = getAuth();
-                connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+                // connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
                 return auth;
             }),
             provideFirestore(() => {
                 const firestore: Firestore = getFirestore();
-                connectFirestoreEmulator(firestore, 'http://localhost', 9098);
+                // connectFirestoreEmulator(firestore, 'http://localhost', 9098);
                 return getFirestore();
-            })),
+            }),
+            MatSnackBarModule,
+        ),
         provideAnimations()
     ]
 };

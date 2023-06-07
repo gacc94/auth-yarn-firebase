@@ -2,6 +2,23 @@ import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, se
 import { inject, Injectable } from '@angular/core';
 import { signInWithRedirect } from '@firebase/auth';
 import { Router } from '@angular/router';
+import {
+    catchError,
+    EMPTY,
+    from, fromEvent, interval,
+    map,
+    Observable,
+    ObservableInput,
+    of,
+    OperatorFunction,
+    switchMap, take, takeLast,
+    throwError
+} from "rxjs";
+import {RoutesUtils} from "@utils/library/routes.utils";
+import firebase from "firebase/compat";
+import FirebaseError = firebase.FirebaseError;
+import {HttpErrorResponse} from "@angular/common/http";
+
 
 
 interface ErrorResponse {
@@ -21,16 +38,12 @@ export class AuthService {
     constructor(
     ) {}
 
-    get userState$(){
+    get userState$(): Observable<User | null>{
         return authState(this.auth);
     }
 
-    async signInGoogle(): Promise<void> {
-        try {
-            await signInWithRedirect(this.auth, this.googleProvider);
-        } catch (err) {
-            console.log('Google login', err);
-        }
+    signInGoogle(): Observable<any> {
+        return from(signInWithRedirect(this.auth, this.googleProvider));
     }
 
     async signOut(): Promise<void> {
@@ -41,57 +54,49 @@ export class AuthService {
         }
     }
 
-    async signUp(email: string, password: string): Promise<void> {
-        try{
-            /*
-          * Create Account */
-            const { user } = await createUserWithEmailAndPassword(this.auth,email,password)
-            await this.sendEmailVerification(user);
-            /*
-          * SendEmail */
-
-            /*
-          * Redirect to welcome */
-            this.router.navigate(['/auth/email-verification']).then();
-        } catch (err) {
-            const { code, message } = err as ErrorResponse;
-            console.log('Code', code);
-            console.log('Message', message)
-
-        }
+    signUp(email: string, password: string): Observable<any> {
+        return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
+            catchError( this.handleError ),
+            switchMap((userCredential: UserCredential) => {
+                const { user } = userCredential;
+                return this.sendEmailVerification(user).pipe(
+                    map( ( ) => this.router.navigate([RoutesUtils.EMAIL_VERIFICATION]) )
+                )
+            })
+        );
     }
 
-    async signIn(email: string, password: string): Promise<void> {
-        try {
-            const { user } = await signInWithEmailAndPassword(this.auth, email, password);
-            console.log(user);
-            this.checkUserIsVerified(user);
-
-        } catch (err) {
-            const { code, message } = err as ErrorResponse;
-            console.log('Code', code);
-            console.log('Message', message)
-
-        }
+    signIn(email: string, password: string): Observable<any> {
+        return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+            map( ( { user } ) => {
+                console.log(user);
+                this.checkUserIsVerified(user);
+            }),
+            catchError( this.handleError )
+        );
     }
 
-    async sendEmailVerification(user: User): Promise<void> {
-        try {
-            await sendEmailVerification(user);
-        } catch (err: unknown) {
-            console.log('', err);
-        }
+    sendEmailVerification(user: User): Observable<void> {
+        return from(sendEmailVerification(user)).pipe(
+            catchError(this.handleError ),
+        );
     }
 
-    async sendPasswordResetEmail(email: string): Promise<void> {
-        try {
-            await sendPasswordResetEmail(this.auth, email);
-        } catch (err: unknown) {
-            console.log('', err);
-        }
+    sendPasswordResetEmail(email: string): Observable<void>{
+        return from(sendPasswordResetEmail(this.auth, email)).pipe(
+            catchError(this.handleError)
+        );
     }
+
+    private handleError(err: any) {
+        // return of({} as T);
+        return throwError(err);
+    }
+
     private checkUserIsVerified(user: User): void {
-        const route: string = user.emailVerified ? '/home' : '/auth/email-verification'
+        const route: string = user.emailVerified
+            ? RoutesUtils.HOME
+            : RoutesUtils.EMAIL_VERIFICATION;
         this.router.navigate([route]).then();
     }
 
