@@ -3,10 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { signInWithRedirect } from '@firebase/auth';
 import { Router } from '@angular/router';
 import {
-    catchError, delay,
+    BehaviorSubject,
+    catchError,
     from,
     map,
-    Observable,
+    Observable, Subject,
     switchMap, tap,
     throwError
 } from "rxjs";
@@ -14,6 +15,7 @@ import {RoutesUtils} from "@utils/library/routes.utils";
 import firebase from "firebase/compat";
 import FirebaseError = firebase.FirebaseError;
 import {TokenService} from "@services/token.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 
 @Injectable({
@@ -24,19 +26,30 @@ export class AuthService {
     private readonly router: Router = inject(Router);
     private readonly googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
     private readonly tokenService: TokenService = inject(TokenService);
+    // private readonly angFirebase: AngularFireAuth = inject(AngularFireAuth);
+
+    user$: Subject<any> = new Subject<any>();
 
     constructor(
-    ) {}
+    ) {
+    }
 
     get userState$(): Observable<User | null>{
         return authState(this.auth);
     }
 
+    get user() {
+        return this.user$.asObservable();
+    }
+
+    set user(user: any) {
+        this.user$.next(user);
+    }
+
     signInGoogle(): Observable<any> {
         return from(signInWithRedirect(this.auth, this.googleProvider)).pipe(
             /*
-             * Aun falta setear el token del usuario al ingresar con google
-             */
+          * Aun falta setear el token del usuario al ingresar con google */
             tap((user) => {
                 const userData = user as any;
                 console.log(userData.accessToken)
@@ -69,13 +82,14 @@ export class AuthService {
 
     signIn(email: string, password: string): Observable<any> {
         return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-            tap(({user}) => {
-                const userData = user as any;
-                console.log(userData.accessToken)
-                this.tokenService.saveToken(userData.accessToken);
+            tap((userCredential: any) => {
+                const { accessToken, refreshToken } = userCredential.user.stsTokenManager;
+                console.log( userCredential.user);
+                this.user = userCredential;
+                this.tokenService.saveToken(accessToken);
+                this.tokenService.saveRefreshToken(refreshToken);
             }),
             map( ( { user } ) => {
-                console.log(user);
                 this.checkUserIsVerified(user);
             }),
             catchError( this.handleError )
@@ -101,7 +115,7 @@ export class AuthService {
 
     private checkUserIsVerified(user: User): void {
         const route: string = user.emailVerified
-            ? RoutesUtils.HOME
+            ? RoutesUtils.DASHBOARD
             : RoutesUtils.EMAIL_VERIFICATION;
         this.router.navigate([route]).then();
     }

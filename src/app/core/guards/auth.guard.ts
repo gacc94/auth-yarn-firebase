@@ -24,7 +24,6 @@ export const authGuard: CanActivateFn = () : Observable<boolean> | boolean | any
     );
 };
 
-
 export const emailVerificationGuard: CanActivateFn | any = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | any | boolean => {
 
     const authService: AuthService = inject(AuthService);
@@ -44,15 +43,16 @@ export const emailVerificationGuard: CanActivateFn | any = (route: ActivatedRout
     );
 }
 
-export const authRedirectGuard: CanActivateFn = () => {
+export const userGuard: CanActivateFn = () => {
     const authService: AuthService = inject(AuthService);
     const router: Router = inject(Router);
     const token: TokenService = inject(TokenService);
+
     console.log('Guard de Dashboard')
-    console.log(token.getToken());
-    if (token.getToken() === null) {
+
+    if (!token.isCheckToken()) {
         router.navigate([RoutesUtils.SIGN_IN]).then();
-        return false
+        return false;
     }
-    return  true
+    return  true;
 }

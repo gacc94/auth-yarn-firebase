@@ -55,3 +55,8 @@ firebase init emulators
 ~~~
 firebase emulators:start
 ~~~
+
+### Instalar Cookies-Service
+~~~
+yarn add ngx-cookie-service
+~~~

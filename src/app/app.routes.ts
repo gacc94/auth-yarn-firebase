@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import {authRedirectGuard} from "@core/guards/auth.guard";
+import { userGuard} from "@core/guards/auth.guard";
 
 export const routes: Routes = [
     {
@@ -12,7 +12,7 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        canActivate: [authRedirectGuard],
+        canActivate: [userGuard],
         loadChildren: () => import('./dashboard/dashboard.routes').then(r=>r.dashboardRoutes),
     },
     {
