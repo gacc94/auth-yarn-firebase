@@ -27,12 +27,12 @@ export class TokenService {
         return this.localStorageService.get(ConstantsUtil.TOKEN);
     }
 
-    isCheckToken(): boolean {
+    isCheckToken(token: string): boolean {
         // return this.cookieService.check(ConstantsUtil.TOKEN);
-        return (Boolean(this.getToken()));
+        return (Boolean(token));
     }
 
-    isCheckRefreshToken(): boolean {
+    isCheckRefreshToken(token: string): boolean {
         // return this.cookieService.check(ConstantsUtil.REFRESH_TOKEN);
         return (Boolean(this.getRefreshToken()));
     }
@@ -56,17 +56,15 @@ export class TokenService {
         return this.localStorageService.get(ConstantsUtil.REFRESH_TOKEN);
     }
 
-    getDecodeToken(): JwtPayload {
-        return jwtDecode<JwtPayload>(this.getToken());
+    getDecodeToken(token: string): JwtPayload {
+        return jwtDecode<JwtPayload>(token);
     }
 
-    isTokenExpired(): boolean {
-        if( !this.isCheckToken() ) {
+    isTokenExpired(token: string): boolean {
+        if( !this.isCheckToken(token) ) {
             return false
         }
-
-        const decodeToken: JwtPayload = this.getDecodeToken();
-
+        const decodeToken: JwtPayload = this.getDecodeToken(token);
         if ( decodeToken && decodeToken.exp ) {
             const timeStamp = new Date().getTime();
             const timeToken = new Date(0).setUTCSeconds(decodeToken.exp);

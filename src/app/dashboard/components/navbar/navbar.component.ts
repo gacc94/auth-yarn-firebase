@@ -34,6 +34,6 @@ export class NavbarComponent implements OnInit{
     }
 
     async signOut(event: Event) {
-        await this.authService.signOut().then();
+        // await this.authService.signOut().then();
     }
 }

@@ -49,7 +49,7 @@ export class DashboardLayoutComponent implements OnInit{
         );
 
     async signOut(event: Event) {
-        await this.authService.signOut().then();
+        await this.authService.signOut()
     }
 
     goToUsers() {
@@ -61,5 +61,9 @@ export class DashboardLayoutComponent implements OnInit{
     }
 
     ngOnInit() {
+    }
+
+    onRefreshToken() {
+        this.authService.refreshAuthToken().subscribe();
     }
 }

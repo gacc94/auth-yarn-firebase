@@ -3,7 +3,10 @@ import {CommonModule} from '@angular/common';
 import {NavbarComponent} from "../../components/navbar/navbar.component";
 import {CookieService} from "ngx-cookie-service";
 import {TokenService} from "@services/token.service";
-import {getAuth} from "@angular/fire/auth";
+import {Auth, getAuth} from "@angular/fire/auth";
+import {AuthService} from "@services/auth.service";
+import firebase from "firebase/compat";
+import IdTokenResult = firebase.auth.IdTokenResult;
 
 @Component({
     selector: 'gac-home',
@@ -13,15 +16,23 @@ import {getAuth} from "@angular/fire/auth";
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit{
-
+    private readonly auth: Auth = inject(Auth);
     constructor(
         private cookieService: CookieService,
         private tokenService: TokenService,
+        private authService: AuthService,
+        // private Auth
     ) {}
 
     ngOnInit() {
-        console.log(getAuth().currentUser);
-        console.log('xd')
+        this.auth.currentUser?.getIdTokenResult(true).then((res: IdTokenResult)=>{
+            console.log(res.token);
+            console.log(this.tokenService.getDecodeToken(res.token));
+        }).catch((err)=> {
+            console.log(err);
+        });
+        this.auth.currentUser?.reload().then(console.log);
+        this.authService.userState$;
     }
 
 }

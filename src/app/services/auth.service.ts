@@ -3,10 +3,10 @@ import {
     authState,
     createUserWithEmailAndPassword,
     getAuth,
-    GoogleAuthProvider,
+    GoogleAuthProvider, onAuthStateChanged,
     sendEmailVerification,
     sendPasswordResetEmail,
-    signInWithEmailAndPassword,
+    signInWithEmailAndPassword, updateProfile,
     User,
     UserCredential
 } from '@angular/fire/auth';
@@ -14,11 +14,10 @@ import { inject, Injectable } from '@angular/core';
 import { signInWithRedirect } from '@firebase/auth';
 import { Router } from '@angular/router';
 import {
-    BehaviorSubject,
     catchError,
     from,
     map,
-    Observable, Subject,
+    Observable, of,
     switchMap, tap,
     throwError
 } from "rxjs";
@@ -38,7 +37,6 @@ export class AuthService {
     private readonly tokenService: TokenService = inject(TokenService);
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
-
     get userState$(): Observable<User | null>{
         return authState(this.auth);
     }
@@ -56,17 +54,45 @@ export class AuthService {
         );
     }
 
-    async signOut() {
-        await this.auth.signOut().then( () => {
-            this.tokenService.removeToken();
-            this.tokenService.removeRefreshToken();
-            this.router.navigate([RoutesUtils.SIGN_IN]).then();
+    async signOut(): Promise<void> {
+        await this.auth.signOut().then( (res) => {
+            // this.tokenService.removeToken();
+            // this.tokenService.removeRefreshToken();
+            this.localStorageService.clear();
+            this.router.navigate([RoutesUtils.SIGN_IN]);
+        }).catch((err) => {
+            console.log(err);
         })
+    }
+
+    authentication() {
+        return onAuthStateChanged(this.auth, (user: User |  null) => {
+
+        });
+    }
+
+    async updateCurrentUser(user: User) {
+
+        try {
+            await updateProfile((user), {
+                displayName: "Jane Q. User",
+                photoURL: "https://example.com/jane-q-user/profile.jpg",
+            }).then((res)=>{
+
+            }).catch((err)=>{
+
+            })
+        } catch (e) {
+
+        }
     }
 
     // signOut(): Observable<any>{
     //     return from(this.auth.signOut()).pipe(
     //         tap((res) => {
+    //             this.tokenService.removeToken();
+    //             this.tokenService.removeRefreshToken();
+    //             this.router.navigate([RoutesUtils.SIGN_IN]);
     //             console.log('eSTOY HACIENDO LOGOUT');
     //         }),
     //         catchError(this.handleError ),
@@ -89,6 +115,7 @@ export class AuthService {
         return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
             tap((userCredential: any) => {
                 const { user } = userCredential;
+                console.log(user.getIdTokenResult());
                 const { accessToken, refreshToken } = userCredential.user.stsTokenManager;
                 console.log( userCredential.user);
                 this.saveUserLocalStorage(user);
@@ -114,6 +141,17 @@ export class AuthService {
         );
     }
 
+    refreshAuthToken(): Observable<any>{
+        if (!this.auth.currentUser) return of({}) ;
+        return from(this.auth.currentUser.getIdToken(true));
+
+        // return from(this.auth.currentUser?.getIdToken(true)).pipe(
+        //     tap((token: string) => {
+        //         this.tokenService.saveToken(token);
+        //     })
+        // )
+    }
+
     private handleError(err: any) {
         // return of({} as T);
         return throwError(err);
@@ -129,5 +167,10 @@ export class AuthService {
     private saveUserLocalStorage(user: User) {
         this.localStorageService.set(ConstantsUtil.CURRENT_USER, user);
     }
+
+    private removeUserLocalStorage(): void {
+        this.localStorageService.remove(ConstantsUtil.CURRENT_USER);
+    }
+
 
 }
