@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {NavbarComponent} from "../../components/navbar/navbar.component";
 import {CookieService} from "ngx-cookie-service";
 import {TokenService} from "@services/token.service";
-import {ConstantsUtil} from "@utils/library/constants.util";
+import jwtDecode, {JwtPayload} from "jwt-decode";
 
 @Component({
   selector: 'gac-home',
@@ -20,9 +20,23 @@ export class HomeComponent {
         private cookieService: CookieService,
         private tokenService: TokenService,
     ) {
-        const base64 = this.tokenService.getToken().split('.')[1];
-        const payload = JSON.parse(atob(base64));
-        console.log(payload);
-        console.log(this.cookieService.check(ConstantsUtil.TOKEN));
+
+        const decoded: JwtPayload = jwtDecode<JwtPayload>(this.tokenService.getToken());
+        const tokenDate = new Date(0);
+
+        if (decoded.exp) {
+            console.log(decoded.exp);
+            console.log(tokenDate.setUTCSeconds(decoded.exp));
+
+            const today =  new Date();
+            console.log( tokenDate.getTime() );
+            console.log( today.getTime());
+            console.log( tokenDate.getTime() > today.getTime());
+            console.log( (today.getTime() - tokenDate.getTime()) );
+            // return ( tokenDate.getTime() > today.getTime());
+        }
+
+        // const decoded2 = jwtDecode(this.tokenService.getRefreshToken());
+        console.log(decoded);
     }
 }

@@ -7,6 +7,8 @@ import {AuthService} from "@services/auth.service";
 import {Router} from "@angular/router";
 import {RoutesUtils} from "@utils/library/routes.utils";
 import {TokenService} from "@services/token.service";
+import {ConstantsUtil} from "@utils/library/constants.util";
+import {tap} from "rxjs";
 
 @Component({
     selector: 'gac-navbar',
@@ -33,6 +35,8 @@ export class NavbarComponent {
 
     signOut(evt: Event): void {
         this.tokenService.removeToken();
-        this.authService.signOut();
+        // this.authService.signOut().pipe(
+        //     tap(() => this.router.navigate([ConstantsUtil.SIGN_IN]).then())
+        // )
     }
 }

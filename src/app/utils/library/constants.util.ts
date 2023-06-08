@@ -28,6 +28,6 @@ export abstract class  ConstantsUtil {
     * ========================================
     *           LOCALSTORAGE - KEYS
     * =======================================*/
-    static readonly TOKEN: string = 'auth-token';
-    static readonly REFRESH_TOKEN: string = 'refresh-auth-token';
+    static readonly TOKEN: string = 'token';
+    static readonly REFRESH_TOKEN: string = 'refresh-token';
 }

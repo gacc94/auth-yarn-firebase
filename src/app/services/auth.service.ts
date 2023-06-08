@@ -12,10 +12,8 @@ import {
     throwError
 } from "rxjs";
 import {RoutesUtils} from "@utils/library/routes.utils";
-import firebase from "firebase/compat";
-import FirebaseError = firebase.FirebaseError;
 import {TokenService} from "@services/token.service";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {ConstantsUtil} from "@utils/library/constants.util";
 
 
 @Injectable({
@@ -26,9 +24,8 @@ export class AuthService {
     private readonly router: Router = inject(Router);
     private readonly googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
     private readonly tokenService: TokenService = inject(TokenService);
-    // private readonly angFirebase: AngularFireAuth = inject(AngularFireAuth);
 
-    user$: Subject<any> = new Subject<any>();
+    user$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
     constructor(
     ) {
@@ -39,7 +36,7 @@ export class AuthService {
     }
 
     get user() {
-        return this.user$.asObservable();
+        return this.user$.getValue();
     }
 
     set user(user: any) {
@@ -59,14 +56,22 @@ export class AuthService {
         );
     }
 
-    signOut(): Observable<any>{
-        return from(this.auth.signOut()).pipe(
-            tap((res) => {
-                console.log('eSTOY HACIENDO LOGOUT');
-            }),
-            catchError(this.handleError ),
-        );
+    async signOut() {
+        await this.auth.signOut().then(( ) => {
+            this.tokenService.removeToken();
+            this.tokenService.removeRefreshToken();
+            this.router.navigate([RoutesUtils.SIGN_IN]).then();
+        })
     }
+
+    // signOut(): Observable<any>{
+    //     return from(this.auth.signOut()).pipe(
+    //         tap((res) => {
+    //             console.log('eSTOY HACIENDO LOGOUT');
+    //         }),
+    //         catchError(this.handleError ),
+    //     );
+    // }
 
     signUp(email: string, password: string): Observable<any> {
         return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(

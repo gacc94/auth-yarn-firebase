@@ -13,28 +13,46 @@ export class TokenService {
        private cookieService: CookieService,
     ) {}
 
-    saveToken(token: string) {
+    // const base64 = this.tokenService.getToken().split('.')[1];
+    // const payload = JSON.parse(atob(base64));
+
+    saveToken(token: string): void {
         // this.localStorageService.set(ConstantsUtil.TOKEN, token);
         this.cookieService.set(ConstantsUtil.TOKEN,token);
     }
 
-    getToken(){
+    getToken(): string {
         return this.cookieService.get(ConstantsUtil.TOKEN);
         // return this.localStorageService.get(ConstantsUtil.TOKEN);
     }
 
-    isCheckToken() {
+    isCheckToken(): boolean {
         return this.cookieService.check(ConstantsUtil.TOKEN);
     }
 
-    removeToken() {
+    isCheckRefreshToken() {
+        return this.cookieService.check(ConstantsUtil.REFRESH_TOKEN);
+    }
+
+    removeToken(): void {
         this.cookieService.delete(ConstantsUtil.TOKEN);
         // this.localStorageService.remove(ConstantsUtil.TOKEN);
     }
+    removeRefreshToken(): void {
+        this.cookieService.delete(ConstantsUtil.REFRESH_TOKEN);
+    }
 
-    saveRefreshToken(refreshToken: string) {
+    saveRefreshToken(refreshToken: string): void {
         this.cookieService.set(ConstantsUtil.REFRESH_TOKEN, refreshToken);
         // this.localStorageService.set(ConstantsUtil.REFRESH_TOKEN, refreshToken);
+    }
+
+    getRefreshToken(): string {
+        return this.cookieService.get(ConstantsUtil.REFRESH_TOKEN);
+    }
+
+    private expiredToken() {
+
     }
 
 }

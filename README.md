@@ -60,3 +60,8 @@ firebase emulators:start
 ~~~
 yarn add ngx-cookie-service
 ~~~
+
+### Instalar jwt-decode 
+~~~
+yarn add jwt-decode
+~~~
