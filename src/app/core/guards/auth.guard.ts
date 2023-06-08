@@ -11,8 +11,8 @@ export const authGuard: CanActivateFn = () : Observable<boolean> | boolean | any
     const router: Router = inject(Router);
     const token: TokenService = inject(TokenService);
     console.log('Auth Guard ')
-    console.log(!token.isCheckToken())
-    if (token.isCheckToken()) {
+    console.log(token.isTokenExpired())
+    if (token.isTokenExpired()) {
         router.navigate([RoutesUtils.DASHBOARD]).then();
         return false;
     }
@@ -43,9 +43,9 @@ export const userGuard: CanActivateFn = () => {
     const router: Router = inject(Router);
     const token: TokenService = inject(TokenService);
     console.log('Guard de Dashboard')
-    console.log(token.isCheckToken())
-    console.log(token.getToken());
-    if (!token.isCheckToken()) {
+    console.log(token.isTokenExpired());
+    console.log((((token.getDecodeToken().exp as number) - (Date.now()/1000 )) / 60).toFixed(2));
+    if (!token.isTokenExpired()) {
         router.navigate([RoutesUtils.SIGN_IN]).then();
         return false;
     }

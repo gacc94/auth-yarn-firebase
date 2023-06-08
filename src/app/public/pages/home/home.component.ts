@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit{
 
     private readonly authService: AuthService = inject(AuthService);
 
-    user$: Observable<any> = this.authService.user;
 
     ngOnInit(): void{
         // this.user$ = this.authService.userState$;

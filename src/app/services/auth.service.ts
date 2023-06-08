@@ -1,4 +1,15 @@
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, User, UserCredential } from '@angular/fire/auth';
+import {
+    Auth,
+    authState,
+    createUserWithEmailAndPassword,
+    getAuth,
+    GoogleAuthProvider,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    User,
+    UserCredential
+} from '@angular/fire/auth';
 import { inject, Injectable } from '@angular/core';
 import { signInWithRedirect } from '@firebase/auth';
 import { Router } from '@angular/router';
@@ -14,6 +25,7 @@ import {
 import {RoutesUtils} from "@utils/library/routes.utils";
 import {TokenService} from "@services/token.service";
 import {ConstantsUtil} from "@utils/library/constants.util";
+import {LocalStorageService} from "@services/local-storage.service";
 
 
 @Injectable({
@@ -24,23 +36,11 @@ export class AuthService {
     private readonly router: Router = inject(Router);
     private readonly googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
     private readonly tokenService: TokenService = inject(TokenService);
+    private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
-    user$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-
-    constructor(
-    ) {
-    }
 
     get userState$(): Observable<User | null>{
         return authState(this.auth);
-    }
-
-    get user() {
-        return this.user$.getValue();
-    }
-
-    set user(user: any) {
-        this.user$.next(user);
     }
 
     signInGoogle(): Observable<any> {
@@ -57,7 +57,7 @@ export class AuthService {
     }
 
     async signOut() {
-        await this.auth.signOut().then(( ) => {
+        await this.auth.signOut().then( () => {
             this.tokenService.removeToken();
             this.tokenService.removeRefreshToken();
             this.router.navigate([RoutesUtils.SIGN_IN]).then();
@@ -88,9 +88,10 @@ export class AuthService {
     signIn(email: string, password: string): Observable<any> {
         return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
             tap((userCredential: any) => {
+                const { user } = userCredential;
                 const { accessToken, refreshToken } = userCredential.user.stsTokenManager;
                 console.log( userCredential.user);
-                this.user = userCredential;
+                this.saveUserLocalStorage(user);
                 this.tokenService.saveToken(accessToken);
                 this.tokenService.saveRefreshToken(refreshToken);
             }),
@@ -123,6 +124,10 @@ export class AuthService {
             ? RoutesUtils.DASHBOARD
             : RoutesUtils.EMAIL_VERIFICATION;
         this.router.navigate([route]).then();
+    }
+
+    private saveUserLocalStorage(user: User) {
+        this.localStorageService.set(ConstantsUtil.CURRENT_USER, user);
     }
 
 }
