@@ -22,6 +22,7 @@ export abstract class RoutesUtils {
     * =======================================*/
     static readonly DASHBOARD: string = '/dashboard';
     static readonly DASH_HOME: string = this.DASHBOARD+'/home';
+    static readonly DASH_USERS: string = this.DASHBOARD+'/users';
 
 
 

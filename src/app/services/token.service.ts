@@ -17,17 +17,18 @@ export class TokenService {
     // const payload = JSON.parse(atob(base64));
 
     saveToken(token: string): void {
-        // this.localStorageService.set(ConstantsUtil.TOKEN, token);
-        this.cookieService.set(ConstantsUtil.TOKEN,token);
+        this.localStorageService.set(ConstantsUtil.TOKEN, token);
+        // this.cookieService.set(ConstantsUtil.TOKEN,token);
     }
 
     getToken(): string {
-        return this.cookieService.get(ConstantsUtil.TOKEN);
-        // return this.localStorageService.get(ConstantsUtil.TOKEN);
+        // return this.cookieService.get(ConstantsUtil.TOKEN);
+        return this.localStorageService.get(ConstantsUtil.TOKEN);
     }
 
     isCheckToken(): boolean {
-        return this.cookieService.check(ConstantsUtil.TOKEN);
+        // return this.cookieService.check(ConstantsUtil.TOKEN);
+        return (!!this.getToken());
     }
 
     isCheckRefreshToken() {
@@ -35,15 +36,16 @@ export class TokenService {
     }
 
     removeToken(): void {
-        this.cookieService.delete(ConstantsUtil.TOKEN);
-        // this.localStorageService.remove(ConstantsUtil.TOKEN);
+        // this.cookieService.delete(ConstantsUtil.TOKEN);
+        this.localStorageService.remove(ConstantsUtil.TOKEN);
     }
     removeRefreshToken(): void {
-        this.cookieService.delete(ConstantsUtil.REFRESH_TOKEN);
+        // this.cookieService.delete(ConstantsUtil.REFRESH_TOKEN);
+        this.localStorageService.remove(ConstantsUtil.REFRESH_TOKEN);
     }
 
     saveRefreshToken(refreshToken: string): void {
-        this.cookieService.set(ConstantsUtil.REFRESH_TOKEN, refreshToken);
+        // this.cookieService.set(ConstantsUtil.REFRESH_TOKEN, refreshToken);
         // this.localStorageService.set(ConstantsUtil.REFRESH_TOKEN, refreshToken);
     }
 

@@ -44,6 +44,7 @@ export const userGuard: CanActivateFn = () => {
     const token: TokenService = inject(TokenService);
     console.log('Guard de Dashboard')
     console.log(token.isCheckToken())
+    console.log(token.getToken());
     if (!token.isCheckToken()) {
         router.navigate([RoutesUtils.SIGN_IN]).then();
         return false;

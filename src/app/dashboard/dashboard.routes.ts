@@ -9,6 +9,11 @@ export const dashboardRoutes: Routes = [
             {
                 path: '',
                 loadComponent: () => import('./pages/home/home.component').then(c=>c.HomeComponent),
+
+            },
+            {
+                path: 'users',
+                loadComponent: () => import('./pages/users/users.component').then(c=>c.UsersComponent),
             },
             {
                 path: '**',
