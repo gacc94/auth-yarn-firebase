@@ -116,7 +116,7 @@ export class AuthService {
         return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
             tap((userCredential: any) => {
                 const { user } = userCredential;
-                console.log(user.getIdTokenResult());
+                // console.log(user.getIdTokenResult());
                 const { accessToken, refreshToken } = userCredential.user.stsTokenManager;
                 console.log( userCredential.user);
                 this.localStorageService.set(ConstantsUtil.CURRENT_USER, user);

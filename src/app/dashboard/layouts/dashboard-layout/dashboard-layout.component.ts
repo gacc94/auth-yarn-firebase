@@ -76,7 +76,7 @@ export class DashboardLayoutComponent implements OnInit{
         const timeRemaining = timeToken - timeStamp;
         const timeThreshold: number = 300000; // Umbral de tiempo en milisegundos (5 minutos)
 
-        console.log('layout', timeRemaining/60000)
+        console.log('Time Expired', timeRemaining/60000)
 
         // if (timeRemaining >= timeThreshold) {
             const minutes = Math.ceil(timeRemaining / 60000);
