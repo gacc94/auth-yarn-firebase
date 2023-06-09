@@ -36,17 +36,22 @@
                 <!--                <mat-error *ngIf="hasError('email')">{{ errorMessage('email') }}</mat-error>-->
             </mat-form-field>
         </div>
-        <div>
-            <mat-form-field appearance="outline">
-                <mat-label>Adress</mat-label>
-                <input matInput
-                       placeholder="Ingrese su direccion"
-                       formControlName="address"
-                       type="email">
-                <mat-icon matSuffix fontIcon="address"/>
-                <!--                <mat-error *ngIf="hasError('email')">{{ errorMessage('email') }}</mat-error>-->
-            </mat-form-field>
+
+        <div formArrayName="address" >
+
+
         </div>
+<!--        <div>-->
+<!--            <mat-form-field appearance="outline">-->
+<!--                <mat-label>Adress</mat-label>-->
+<!--                <input matInput-->
+<!--                       placeholder="Ingrese su direccion"-->
+<!--                       formControlName=""-->
+<!--                       type="email">-->
+<!--                <mat-icon matSuffix fontIcon="address"/>-->
+<!--                &lt;!&ndash;                <mat-error *ngIf="hasError('email')">{{ errorMessage('email') }}</mat-error>&ndash;&gt;-->
+<!--            </mat-form-field>-->
+<!--        </div>-->
 
 
     </mat-dialog-content>

@@ -40,9 +40,12 @@ export class FormUserComponent implements OnInit {
     initForm() {
         this.form = this._fb.group({
             id: ['', [Validators.required]],
-            name: [],
-            email: [],
-            address: [this._fb.array([])],
+            name: [''],
+            email: [''],
+            address: this._fb.array([{
+                id: [''],
+                name: [''],
+            }]),
         })
     }
 
