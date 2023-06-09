@@ -25,6 +25,7 @@ import {RoutesUtils} from "@utils/library/routes.utils";
 import {TokenService} from "@services/token.service";
 import {ConstantsUtil} from "@utils/library/constants.util";
 import {LocalStorageService} from "@services/local-storage.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 
 @Injectable({
@@ -167,10 +168,5 @@ export class AuthService {
     private saveUserLocalStorage(user: User) {
         this.localStorageService.set(ConstantsUtil.CURRENT_USER, user);
     }
-
-    private removeUserLocalStorage(): void {
-        this.localStorageService.remove(ConstantsUtil.CURRENT_USER);
-    }
-
 
 }

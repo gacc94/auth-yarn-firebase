@@ -8,7 +8,7 @@ export const dashboardRoutes: Routes = [
         component: DashboardLayoutComponent,
         children: [
             {
-                path: '',
+                path: 'home',
                 canActivate: [userGuard],
                 loadComponent: () => import('./pages/home/home.component').then(c=>c.HomeComponent),
 
@@ -20,7 +20,7 @@ export const dashboardRoutes: Routes = [
             },
             {
                 path: '**',
-                redirectTo: '',
+                redirectTo: 'home',
                 pathMatch: 'full',
             }
         ]

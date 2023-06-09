@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {Router, RouterOutlet} from "@angular/router";
+import {Router, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {NavbarComponent} from "../../components/navbar/navbar.component";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -30,6 +30,7 @@ import {LocalStorageService} from "@services/local-storage.service";
         MatToolbarModule,
         MatSidenavModule,
         MatListModule,
+        RouterLinkActive,
     ],
     templateUrl: './dashboard-layout.component.html',
     styleUrls: ['./dashboard-layout.component.scss']
@@ -57,7 +58,7 @@ export class DashboardLayoutComponent implements OnInit{
     }
 
     goToHome() {
-        this.router.navigate([RoutesUtils.DASHBOARD]).then();
+        this.router.navigate([RoutesUtils.DASH_HOME]).then();
     }
 
     ngOnInit() {
