@@ -65,3 +65,8 @@ yarn add ngx-cookie-service
 ~~~
 yarn add jwt-decode
 ~~~
+
+### Instalar SweetAlert2
+~~~
+yarn add sweetalert2 @sweetalert2/ngx-sweetalert2
+~~~

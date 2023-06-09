@@ -119,7 +119,7 @@ export class AuthService {
                 console.log(user.getIdTokenResult());
                 const { accessToken, refreshToken } = userCredential.user.stsTokenManager;
                 console.log( userCredential.user);
-                this.saveUserLocalStorage(user);
+                this.localStorageService.set(ConstantsUtil.CURRENT_USER, user);
                 this.tokenService.saveToken(accessToken);
                 this.tokenService.saveRefreshToken(refreshToken);
             }),
@@ -144,13 +144,11 @@ export class AuthService {
 
     refreshAuthToken(): Observable<any>{
         if (!this.auth.currentUser) return of({}) ;
-        return from(this.auth.currentUser.getIdToken(true));
-
-        // return from(this.auth.currentUser?.getIdToken(true)).pipe(
-        //     tap((token: string) => {
-        //         this.tokenService.saveToken(token);
-        //     })
-        // )
+        return from(this.auth.currentUser?.getIdToken(true)).pipe(
+            tap((token: string) => {
+                this.tokenService.saveToken(token);
+            })
+        )
     }
 
     private handleError(err: any) {

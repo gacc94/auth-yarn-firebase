@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {LocalStorageService} from "@services/local-storage.service";
 import {ConstantsUtil} from "@utils/library/constants.util";
 import {CookieService} from "ngx-cookie-service";
@@ -9,11 +9,8 @@ import jwtDecode, {JwtPayload} from "jwt-decode";
 })
 export class TokenService {
 
-    constructor(
-       private localStorageService: LocalStorageService,
-       private cookieService: CookieService,
-    ) {}
-
+    private readonly localStorageService: LocalStorageService = inject(LocalStorageService)
+    private readonly cookieService: CookieService = inject( CookieService);
     // const base64 = this.tokenService.getToken().split('.')[1];
     // const payload = JSON.parse(atob(base64));
 

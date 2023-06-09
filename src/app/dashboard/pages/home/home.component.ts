@@ -17,21 +17,18 @@ import IdTokenResult = firebase.auth.IdTokenResult;
 })
 export class HomeComponent implements OnInit{
     private readonly auth: Auth = inject(Auth);
-    constructor(
-        private cookieService: CookieService,
-        private tokenService: TokenService,
-        private authService: AuthService,
-        // private Auth
-    ) {}
+    private readonly cookieService: CookieService = inject(CookieService);
+    private readonly tokenService: TokenService = inject(TokenService);
+    private readonly authService: AuthService = inject(AuthService);
+
 
     ngOnInit() {
         this.auth.currentUser?.getIdTokenResult(true).then((res: IdTokenResult)=>{
-            console.log(res.token);
+            // console.log(res.token);
             console.log(this.tokenService.getDecodeToken(res.token));
         }).catch((err)=> {
             console.log(err);
         });
-        this.auth.currentUser?.reload().then(console.log);
         this.authService.userState$;
     }
 

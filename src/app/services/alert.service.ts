@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Injectable({
@@ -6,13 +6,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class AlertService {
 
-    constructor(private _snackBar: MatSnackBar) {
-    }
+    private readonly _snackBar: MatSnackBar = inject(MatSnackBar);
 
-    snackBarError(message: string){
+    snackBarError(message: string, icon: string = '🍕'){
         this._snackBar.open(
             message,
-            '🍕',
+            icon,
             {
                 horizontalPosition: 'center',
                 verticalPosition: 'top',

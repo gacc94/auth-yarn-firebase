@@ -48,6 +48,5 @@ export const userGuard: CanActivateFn = () => {
         router.navigate([RoutesUtils.SIGN_IN]).then();
         return false;
     }
-    console.log((((token.getDecodeToken(token.getToken()).exp as number) - (Date.now()/1000 )) / 60).toFixed(2));
     return  true;
 }
