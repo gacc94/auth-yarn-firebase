@@ -1,17 +1,17 @@
 <p>Users Conponent</p>
 
-<button mat-raised-button color="primary" (click)="onCreate()">
+<button mat-raised-button color="primary" (click)="openDialog()">
    Create
 </button>
+<mat-divider style="margin: 1.25rem 0"/>
 <ng-container *ngIf="(users$ | async) as users">
-    <ul *ngFor="let user of users">
-        <li>
-            <mark>Name</mark>
-            : {{user.name}} |
-            <mark>Email</mark>
-            : {{user.email}}</li>
-    </ul>
-
+<!--    <ul *ngFor="let user of users">-->
+<!--        <li>-->
+<!--            <mark>Name</mark>-->
+<!--            : {{user.name}} |-->
+<!--            <mark>Email</mark>-->
+<!--            : {{user.email}}</li>-->
+<!--    </ul>-->
     <table mat-table [dataSource]="users" class="mat-elevation-z8">
 
         <!-- Position Column -->
@@ -36,10 +36,12 @@
         <ng-container matColumnDef="option">
             <th mat-header-cell *matHeaderCellDef> Options</th>
             <td mat-cell *matCellDef="let element">
-                <button mat-icon-button color="warn" matTooltip="delete">
+                <button mat-icon-button color="warn"
+                        matTooltip="delete" (click)="onDelete(element.id)">
                     <mat-icon fontIcon="delete"></mat-icon>
                 </button>
-                <button mat-icon-button color="accent" matTooltip="update">
+                <button mat-icon-button color="accent"
+                        matTooltip="update" (click)="openDialog(element)">
                     <mat-icon fontIcon="update"></mat-icon>
                 </button>
             </td>

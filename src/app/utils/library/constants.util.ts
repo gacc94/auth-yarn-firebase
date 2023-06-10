@@ -31,4 +31,13 @@ export abstract class  ConstantsUtil {
     static readonly TOKEN: string = 'token';
     static readonly REFRESH_TOKEN: string = 'refresh-token';
     static readonly CURRENT_USER: string = 'current-user';
+
+
+    /*
+    * ========================================
+    *           STATUS - ACTIONS
+    * =======================================*/
+    static readonly UPDATE: string = 'update';
+    static readonly CREATE: string = 'create';
+
 }

@@ -18,6 +18,14 @@ export class SweetAlertService {
         })
     }
 
+    notification(title: string, icon: any = 'success'): void {
+        Swal.fire({
+            position: "center",
+            icon,
+            title,
+            showConfirmButton: true,
+        }).then()
+    }
 
 
 
