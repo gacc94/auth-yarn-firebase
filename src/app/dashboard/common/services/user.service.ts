@@ -15,6 +15,7 @@ import {from, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import firebase from "firebase/compat";
 import DocumentData = firebase.firestore.DocumentData;
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +23,11 @@ import DocumentData = firebase.firestore.DocumentData;
 export class UserService {
 
     private readonly firestore: Firestore = inject(Firestore);
+    private readonly http:HttpClient = inject(HttpClient);
 
     addUser(user: IUser): Observable<any> {
         const userRef = collection(this.firestore, 'users');
+
         return from(addDoc(userRef, user));
 
     }
@@ -51,7 +54,7 @@ export class UserService {
         )
     }
 
-    async deleteUser(id: string) {
+    async deleteUser(id: string): Promise<void> {
         const userRef = collection(this.firestore, 'users');
         let q = query(userRef, where('id', '==', id));
 
@@ -62,7 +65,7 @@ export class UserService {
         //     deleteDoc(docRef);
         // })
 
-        return  getDocs(q).then((res) => {
+        return await getDocs(q).then((res) => {
             res.forEach((document) => {
                 deleteDoc(doc(this.firestore, 'users', document.id))
             })
@@ -78,6 +81,10 @@ export class UserService {
         //     })
         // )
 
+    }
+
+    example() {
+        return this.http.post('', {withCredentials: true}, {})
     }
 
 }

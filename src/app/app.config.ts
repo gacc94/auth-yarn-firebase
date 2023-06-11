@@ -7,6 +7,9 @@ import {connectFirestoreEmulator, Firestore, getFirestore, provideFirestore} fro
 import {Auth, connectAuthEmulator, getAuth, provideAuth} from "@angular/fire/auth";
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from "@angular/common/http";
+import {tokenInterceptor} from "@core/interceptors/token.interceptor";
+import {TokenIntInterceptor} from "@core/interceptors/token-int.interceptor";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDkoOMhxux5vPznOtgVTT7bXl-Y3uN2Z9E",
@@ -36,5 +39,11 @@ export const appConfig: ApplicationConfig = {
             MatSnackBarModule,
         ),
         provideAnimations(),
+        provideHttpClient(
+            withInterceptors([tokenInterceptor]),
+        ),
+        {
+            provide: HTTP_INTERCEPTORS, useClass: TokenIntInterceptor, multi: true
+        }
     ]
 };

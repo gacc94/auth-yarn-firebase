@@ -1,5 +1,5 @@
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {Component, DestroyRef, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2";
 import {MatButtonModule} from "@angular/material/button";
 import {SweetAlertService} from "@services/sweet-alert.service";
@@ -26,7 +26,8 @@ import {ConstantsUtil} from "@utils/library/constants.util";
         MatIconModule,
         MatDialogModule,
         MatTooltipModule,
-        MatListModule
+        MatListModule,
+        NgOptimizedImage
     ],
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.scss']
@@ -37,17 +38,27 @@ export class UsersComponent implements OnInit {
     private readonly _matDialog: MatDialog = inject(MatDialog);
     private destroyRef: DestroyRef = inject(DestroyRef);
 
+    @ViewChild('player') player!: ElementRef;
+    @HostListener('document:keydown', ['$event.key']) handleKey!: ($event:KeyboardEvent ) => void;
+
+    image = ['',''];
     users$: Observable<IUser[]> = <Observable<IUser[]>>this.userService.getUsers();
 
     displayedColumns: string[] = ['id', 'name', 'email', 'option'];
 
 
-    ngOnInit() {
+    async ngOnInit() {
+
+        this.handleKey = ($event: KeyboardEvent) => {
+            console.log($event);
+        }
+
         this.users$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (value) => {
                 console.log(value);
             }
         })
+
     }
 
 

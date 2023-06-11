@@ -13,8 +13,6 @@ import {map, shareReplay} from "rxjs/operators";
 import {AuthService} from "@services/auth.service";
 import {TokenService} from "@services/token.service";
 import {RoutesUtils} from "@utils/library/routes.utils";
-import {getAuth} from "@angular/fire/auth";
-import {LocalStorageService} from "@services/local-storage.service";
 import {SweetAlertService} from "@services/sweet-alert.service";
 import {SweetAlertResult} from "sweetalert2";
 import {JwtPayload} from "jwt-decode";
@@ -38,7 +36,7 @@ import {JwtPayload} from "jwt-decode";
     templateUrl: './dashboard-layout.component.html',
     styleUrls: ['./dashboard-layout.component.scss']
 })
-export class DashboardLayoutComponent implements OnInit{
+export class DashboardLayoutComponent implements OnInit {
 
     private breakpointObserver = inject(BreakpointObserver);
     private readonly authService: AuthService = inject(AuthService);
@@ -70,30 +68,29 @@ export class DashboardLayoutComponent implements OnInit{
     }
 
     startTokenTimer(): void {
-        const decodeToken: JwtPayload = this.tokenService.getDecodeToken(this.tokenService.getToken()) ;
+        const decodeToken: JwtPayload = this.tokenService.getDecodeToken(this.tokenService.getToken());
         const timeStamp = new Date().getTime();
         const timeToken = new Date(0).setUTCSeconds((decodeToken.exp as number));
         const timeRemaining = timeToken - timeStamp;
         const timeThreshold: number = 300000; // Umbral de tiempo en milisegundos (5 minutos)
 
-        console.log('Time Expired', timeRemaining/60000)
+        console.log('Time Expired', timeRemaining / 60000)
 
         // if (timeRemaining >= timeThreshold) {
-            const minutes = Math.ceil(timeRemaining / 60000);
+        const minutes = Math.ceil(timeRemaining / 60000);
 
-            setTimeout(() => {
-                this.sweetAlertService.startAlertRefreshToken(minutes).then((res: SweetAlertResult) => {
-                    if (res.isConfirmed) {
-                        this.authService.refreshAuthToken().subscribe()
-                    } else {
-                        console.log('Su tiempo se expirara')
-                    }
-                })
-            }, timeRemaining)
+        setTimeout(() => {
+            this.sweetAlertService.startAlertRefreshToken(minutes).then((res: SweetAlertResult) => {
+                if (res.isConfirmed) {
+                    this.authService.refreshAuthToken().subscribe()
+                } else {
+                    console.log('Su tiempo se expirara')
+                }
+            })
+        }, timeRemaining)
 
         // }
     }
-
 
 
 }
