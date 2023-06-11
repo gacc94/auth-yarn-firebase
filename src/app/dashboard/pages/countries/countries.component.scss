@@ -1,0 +1,32 @@
+
+.example-header-image {
+    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+    background-size: cover;
+}
+
+
+.country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 1.25rem;
+}
+
+.card {
+    overflow: hidden;
+    border-radius: .625rem;
+    box-shadow: 0 0 1rem rgba( 0 0 0 / 0.4);
+}
+img-loader {
+    //width: auto;
+    //height: auto;
+    //max-width: 100%;
+    opacity: .5;
+}
+mat-card-header {
+    position: relative;
+    z-index: 1;
+}
+
+.img-content {
+    //position: absolute;
+}

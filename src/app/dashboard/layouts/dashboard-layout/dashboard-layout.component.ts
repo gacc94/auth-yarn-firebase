@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {Router, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {NavbarComponent} from "../../components/navbar/navbar.component";
 import {MatButtonModule} from "@angular/material/button";
@@ -16,6 +16,8 @@ import {RoutesUtils} from "@utils/library/routes.utils";
 import {SweetAlertService} from "@services/sweet-alert.service";
 import {SweetAlertResult} from "sweetalert2";
 import {JwtPayload} from "jwt-decode";
+import {ConstantsUtil} from "@utils/library/constants.util";
+import {LocalStorageService} from "@services/local-storage.service";
 
 @Component({
     selector: 'gac-dashboard-layout',
@@ -32,6 +34,7 @@ import {JwtPayload} from "jwt-decode";
         MatSidenavModule,
         MatListModule,
         RouterLinkActive,
+        NgOptimizedImage,
     ],
     templateUrl: './dashboard-layout.component.html',
     styleUrls: ['./dashboard-layout.component.scss']
@@ -43,28 +46,34 @@ export class DashboardLayoutComponent implements OnInit {
     private readonly router: Router = inject(Router);
     private readonly tokenService: TokenService = inject(TokenService);
     private readonly sweetAlertService = inject(SweetAlertService);
+    private readonly localStorageService:LocalStorageService = inject(LocalStorageService);
 
+    photoUrl!: string;
 
-    isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-        .pipe(
+    isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
             map(result => result.matches),
             shareReplay()
         );
 
     ngOnInit() {
         this.startTokenTimer();
+        this.photoUrl = this.localStorageService.get(ConstantsUtil.CURRENT_USER).photoURL;
     }
 
     async signOut(event: Event) {
         await this.authService.signOut()
     }
 
-    goToUsers() {
+    goToUsers(): void {
         this.router.navigate([RoutesUtils.DASH_USERS]).then();
     }
 
-    goToHome() {
+    goToHome(): void {
         this.router.navigate([RoutesUtils.DASH_HOME]).then();
+    }
+
+    goToCountries(): void {
+        this.router.navigate([RoutesUtils.DASH_COUNTRIES]).then();
     }
 
     startTokenTimer(): void {
@@ -91,6 +100,5 @@ export class DashboardLayoutComponent implements OnInit {
 
         // }
     }
-
 
 }

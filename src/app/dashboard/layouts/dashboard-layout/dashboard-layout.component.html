@@ -5,10 +5,16 @@
                  [mode]="(isHandset$ | async) ? 'over' : 'side'"
                  [opened]="(isHandset$ | async) === false">
         <mat-toolbar>Menu</mat-toolbar>
+        <mat-divider/>
+        <div class="photo-content">
+            <img [ngSrc]="photoUrl" alt="photoUrl"  height="80" width="80" priority>
+        </div>
+        <mat-divider/>
+
         <mat-nav-list>
             <a mat-list-item routerLinkActive="active" (click)="goToHome()">Home</a>
             <a mat-list-item (click)="goToUsers()">Users</a>
-<!--            <a mat-list-item href="#">Link 3</a>-->
+            <a mat-list-item (click)="goToCountries()">Countries</a>
         </mat-nav-list>
 
 <!--        <button  mat-raised-button color="primary" (click)=")">-->

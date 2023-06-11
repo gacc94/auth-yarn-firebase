@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import {environment} from "@environments/environment";
 
 @Component({
   selector: 'gac-root',
@@ -13,5 +14,6 @@ export class AppComponent {
   title = 'auth-yarn-fire';
 
   constructor() {
+      console.log('env: => ', environment.name);
   }
 }

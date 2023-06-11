@@ -61,8 +61,6 @@ export class UsersComponent implements OnInit {
 
     }
 
-
-
     get configDialog() {
         const dialogConfig: MatDialogConfig = {
             disableClose: true,

@@ -1,0 +1,28 @@
+<div class="country-grid" >
+    <mat-card class="card" *ngFor="let country of countries; let i = index">
+        <mat-card-header>
+            <img mat-card-avatar [src]="country.flags.svg"
+                 [alt]="country.flags.alt" loading="lazy" fill>
+
+            <mat-card-title>{{country.name.common}}</mat-card-title>
+            <mat-card-subtitle>{{country.capital}}</mat-card-subtitle>
+        </mat-card-header>
+<!--        <img  class="img-loader" mat-card-md-image [alt]="country.flags.alt"  fill-->
+<!--             ngSrc="{{country.flags.svg}}" >-->
+
+        <img mat-card-image [src]="country.flags.svg"
+             [alt]="country.flags.alt" loading="lazy" fill>
+        <mat-card-content>
+            <p>
+                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+                A small
+            </p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button > LIKE</button>
+            <button mat-raised-button type="button"  color="primary" (click)="onDetails(country)">View</button>
+        </mat-card-actions>
+    </mat-card>
+
+</div>
+

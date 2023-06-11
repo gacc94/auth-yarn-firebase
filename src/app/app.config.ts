@@ -10,22 +10,13 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptors} from "@angular/common/http";
 import {tokenInterceptor} from "@core/interceptors/token.interceptor";
 import {TokenIntInterceptor} from "@core/interceptors/token-int.interceptor";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDkoOMhxux5vPznOtgVTT7bXl-Y3uN2Z9E",
-    authDomain: "auth-firebase-angular-e54c1.firebaseapp.com",
-    projectId: "auth-firebase-angular-e54c1",
-    storageBucket: "auth-firebase-angular-e54c1.appspot.com",
-    messagingSenderId: "139005490875",
-    appId: "1:139005490875:web:da7238e9a09c2d925cdb9e"
-};
-
+import {environment} from "@environments/environment";
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(routes),
         importProvidersFrom(
-            provideFirebaseApp(() => initializeApp(firebaseConfig)),
+            provideFirebaseApp(() => initializeApp(environment.firebase)),
             provideAuth(() => {
                 const auth: Auth = getAuth();
                 // connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });

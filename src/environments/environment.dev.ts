@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    name: 'local',
+    name: 'dev',
     firebase: {
         apiKey: "AIzaSyDkoOMhxux5vPznOtgVTT7bXl-Y3uN2Z9E",
         authDomain: "auth-firebase-angular-e54c1.firebaseapp.com",
@@ -10,9 +10,6 @@ export const environment = {
         appId: "1:139005490875:web:da7238e9a09c2d925cdb9e"
     },
     apiUrl: '',
-    apiUrlRestCountry: 'https://restcountries.com/v3.1'
+    apiUrlRestCountry: 'https://restcountries.com/v3.1/'
 };
 
-export const restCountry = {
-    apiUrl: 'https://restcountries.com/v3.1/'
-}

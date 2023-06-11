@@ -1,9 +1,20 @@
 import {Injectable} from '@angular/core';
-import {HttpContextToken, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {
+    HttpContext,
+    HttpContextToken,
+    HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
+} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {TokenService} from "@services/token.service";
 
 const CHECK_TOKEN = new HttpContextToken(()=>false);
+
+export const checkToken = () => {
+    return new HttpContext().set(CHECK_TOKEN,true);
+}
 
 @Injectable({
     providedIn: "root",

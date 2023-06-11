@@ -26,6 +26,7 @@ import {TokenService} from "@services/token.service";
 import {ConstantsUtil} from "@utils/library/constants.util";
 import {LocalStorageService} from "@services/local-storage.service";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {getFunctions, httpsCallable} from "@angular/fire/functions";
 
 
 @Injectable({
@@ -113,6 +114,12 @@ export class AuthService {
     }
 
     signIn(email: string, password: string): Observable<any> {
+        // const addMessage = httpsCallable(getFunctions(), 'addMessage');
+        // from(addMessage({uid: '', rol:''})).pipe(
+        //     map((res)=>{
+        //         console.log(res.data)
+        //     })
+        // )
         return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
             tap((userCredential: any) => {
                 const { user } = userCredential;
@@ -128,6 +135,7 @@ export class AuthService {
             }),
             catchError( this.handleError )
         );
+
     }
 
     sendEmailVerification(user: User): Observable<void> {
